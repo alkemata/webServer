@@ -1,0 +1,24 @@
+# Updated: 2016-10-31
+
+# Core
+gunicorn
+Django<2.1
+whitenoise
+wagtail
+django-overextends
+wagtailmodeladmin
+
+## PostgreSQL
+psycopg2
+dj-database-url
+
+
+## GIF image processing
+Wand
+
+# HTML sanitisation/cleaning
+bleach
+
+# Debug
+django-debug-toolbar
+django-template-debug

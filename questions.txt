@@ -1,0 +1,11 @@
+Questions
+
+- add current package configuration of python project to requirements.txt to freeze it
+- is vagrant useful?
+
+
+
+
+
+- install: 
+https://github.com/fffunction/setting-up-wagtail-with-docker#dj_database_url-config

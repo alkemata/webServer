@@ -1,0 +1,38 @@
+web:
+  restart: always
+  build: ./web
+  expose:
+    - "8000"
+  environment:
+    - DEBUG=True
+    - DEV=True
+    - DATABASE_URL=postgres://postgres:@postgres:5432/postgres
+    - SECRET_KEY=notasecretreplaceme
+  links:
+    - postgres:postgres
+  volumes:
+    - ./web/alkemata/alkemata:/usr/src/app
+  command:  python manage.py runserver 0.0.0.0:8000
+#  command: /usr/local/bin/gunicorn alkemata.wsgi:application -w 2 -b :8000 --reload
+
+nginx:
+  restart: always
+  build: ./nginx/
+  ports:
+    - "80:80"
+    - "443:443"
+  volumes:
+    - /www/static
+  volumes_from:
+    - web
+  links:
+    - web:web
+   
+
+postgres:
+  restart: always
+  image: postgres:latest
+  volumes:
+    - /mnt/vdb/database:/var/lib/postgresql/data
+  ports:
+    - "5432:5432"
