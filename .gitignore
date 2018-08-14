@@ -2,5 +2,6 @@
 startbootstrap*
 nginx.crt
 nginx.key
-*media
+**media
 **static
+*.swp

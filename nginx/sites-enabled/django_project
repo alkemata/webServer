@@ -14,7 +14,7 @@ server {
     access_log /dev/stdout;
     error_log /dev/stdout info;
     location /static/ {
-        alias /usr/src/app/alkemata/static/;
+        alias /usr/src/app/static/;
     }
 
 

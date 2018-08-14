@@ -9,3 +9,22 @@ Questions
 
 - install: 
 https://github.com/fffunction/setting-up-wagtail-with-docker#dj_database_url-config
+
+postgresql
+access command line:
+docker-compose up -d
+docker exec -it postgres psql -U postgres
+
+list schemas:
+select schema_name
+from information_schema.schemata
+\l list databases
+\dt list tables
+\connect databases
+drop database your_database_name;
+create database your_database_name with owner user_you_use_in_django;
+
+
+django:
+docker-compose run web ./manage.py makemigrations
+docker-compose run web ./manage.py migrate

@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% load wagtailimages_tags %}
+{% load wagtailcore_tags %}
+
 
 {% block body_class %}template-homepage{% endblock %}
 
@@ -9,11 +12,11 @@
         <!-- Heading Row -->
         <div class="row my-4">
           <div class="col-lg-8">
-            {% image page.headline_image fill-900x400 %}
+            {% image page.headline_image fill-600x400 %}
           </div>
           <!-- /.col-lg-8 -->
           <div class="col-lg-4">
-            {{ page.body|richtext }}
+            {{ page.headline|richtext }}
           </div>
           <!-- /.col-md-4 -->
         </div>
@@ -22,7 +25,7 @@
         <!-- Call to Action Well -->
         <div class="card text-white bg-secondary my-4 text-center">
           <div class="card-body">
-            <p class="text-white m-0">This call to action card is a great place to showcase some important information or display a clever tagline!</p>
+            <p class="text-white m-0">{{page.messages|richtext}}</p>
           </div>
         </div>
   
@@ -31,15 +34,15 @@
           <div class="col-md-4 mb-4">
             <div class="card h-100">
               <div class="card-body">
-                <h2 class="card-title">Actualites</h2>
+                <h2 class="card-title">{{page.news_page.title}}</h2>
                 <p class="card-text">
-                        {% for item in page.latestnews %}
-                        {{item.intro}}/br
+                        {% for item in page.news_page.specific.latest %}
+                        {{item.title}}/br
                         {% endfor %}
                 </p>
               </div>
               <div class="card-footer">
-                <a href="{% pageurl page. %}" class="btn btn-primary">Tout afficher</a>
+                <a href="{% pageurl page.news_page %}" class="btn btn-primary">Tout afficher</a>
               </div>
             </div>
           </div>
