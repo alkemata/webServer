@@ -36,3 +36,12 @@ postgres:
     - /mnt/vdb/database:/var/lib/postgresql/data
   ports:
     - "5432:5432"
+
+jupyter:
+  image: jupyter/scipy-notebook:latest
+  ports:
+    - "8888:8888"
+  volumes:
+    - ./kernelclient:/home/jovyan/notebooks
+  command: jupyter kernelgateway --KernelGatewayApp.ip=0.0.0.0 --KernelGatewayApp.port=8888
+

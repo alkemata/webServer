@@ -28,3 +28,8 @@ create database your_database_name with owner user_you_use_in_django;
 django:
 docker-compose run web ./manage.py makemigrations
 docker-compose run web ./manage.py migrate
+
+git:
+git remote add origin https://...
+git remote show origin # if everything is ok, you will see your remote
+git push -u origin master # assuming your are on the master branch.
