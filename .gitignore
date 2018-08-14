@@ -1,0 +1,6 @@
+*.pyc
+startbootstrap*
+nginx.crt
+nginx.key
+*media
+**static
