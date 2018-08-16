@@ -3,6 +3,7 @@ web:
   build: ./web
   expose:
     - "8000"
+    - "8001"
   environment:
     - DEBUG=True
     - DEV=True
@@ -10,6 +11,7 @@ web:
     - SECRET_KEY=notasecretreplaceme
   links:
     - postgres:postgres
+    - redis:redis
   volumes:
     - ./web/alkemata/alkemata:/usr/src/app
   command:  python manage.py runserver 0.0.0.0:8000
@@ -42,6 +44,13 @@ jupyter:
   ports:
     - "8888:8888"
   volumes:
-    - ./kernelclient:/home/jovyan/notebooks
+    - ./kernelClient:/home/jovyan/notebooks
   command: jupyter kernelgateway --KernelGatewayApp.ip=0.0.0.0 --KernelGatewayApp.port=8888
 
+redis:
+  image: redis:3.0-alpine
+
+npm:
+  build: ./npm/
+  volumes:
+    - ./web/alkemata/alkemata/client:/usr/src/app 

@@ -5,3 +5,4 @@ nginx.key
 **media
 **static
 *.swp
+**node_modules

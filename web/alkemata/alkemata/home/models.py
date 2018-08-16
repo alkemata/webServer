@@ -101,7 +101,7 @@ class NewsPage(Page):
     subpage_types = []
 
 class TopicIndexPage(Page):
-        intro = RichTextField(blank=True)
+    intro = RichTextField(blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('intro', classname="full")
@@ -134,7 +134,6 @@ class TopicIndexPage(Page):
         return context
 
 class TopicPage(Page):
-    author = models.CharField(max_length=255)
     date = models.DateField("Post date")
     body = StreamField([
         ('heading', blocks.CharBlock(classname="full title")),
@@ -147,7 +146,7 @@ class TopicPage(Page):
     ])
 
     content_panels = Page.content_panels + [
-        FieldPanel('author'),
+        FieldPanel('title'),
         FieldPanel('date'),
         StreamFieldPanel('body'),
     ]
