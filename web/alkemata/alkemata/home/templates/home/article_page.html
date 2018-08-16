@@ -1,0 +1,33 @@
+{% extends "home/base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+{% with blocks=self.body %}
+
+    {% for block in blocks %}
+        {% if block.block_type == 'heading' %}
+            <h2>{{ block.value }}</h2>
+        {% else %}
+           <section class="block-{{ block.block_type }}">
+               {{ block }}
+           </section>
+        {% endif %}
+    {% endfor %}
+
+{% endwith %}
+
+{% with categories=page.categories.all %}
+    {% if categories %}
+        <h3>Categories</h3>
+        <ul>
+            {% for category in categories %}
+                <li style="display: inline">
+                    {{ category.name }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+{% endblock %}

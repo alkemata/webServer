@@ -28,6 +28,8 @@ INSTALLED_APPS = [
     'home',
     'search',
     'user',
+    'chat',
+    'channels',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
@@ -159,3 +161,14 @@ AUTH_USER_MODEL = 'user.User'
 WAGTAIL_USER_EDIT_FORM = 'user.forms.CustomUserEditForm'
 WAGTAIL_USER_CREATION_FORM = 'user.forms.CustomUserCreationForm'
 WAGTAIL_USER_CUSTOM_FIELDS = ['role', 'profile_image']
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis-server-name", 6379)],
+        },
+    },
+}
+
+ASGI_APPLICATION = "alkemata.routing.application"
