@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static wagtailimages_tags %}
+{% load wagtailcore_tags %}
+
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block content %}
+<form action="/chat/" method="post">{% csrf_token %}
+  <div class="form-group">
+    <label for="roomName">Create a new room:</label>
+    <input type="text" class="form-control" id="roomName" name ="roomName" aria-describedby="roomHelp" placeholder="room name">
+    <small id="roomHelp" class="form-text text-muted">Enter a short title for your room</small>
+  </div>
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+<h3>List of existing rooms</h3>
+<ul class="list-group">
+{% for room in rooms%}
+<a href="/chat/{{room.title}}" class="list-group-item list-group-item-action justify-content-between align-items-center">
+    {{room.title}}
+    <span class="badge badge-primary badge-pill">{{room.connected_count}}</span>
+  </a>
+{% endfor%}
+</ul>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'site/js/site.js' %}"></script>
+{% endblock scripts %}

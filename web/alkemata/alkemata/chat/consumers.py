@@ -2,34 +2,14 @@
 from django.conf import settings
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from .exceptions import ClientError
-from .utils import get_room_or_error
+from . import utils
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
-    """
-    This chat consumer handles websocket connections for chat clients.
-
-    It uses AsyncJsonWebsocketConsumer, which means all the handling functions
-    must be async functions, and any sync work (like ORM access) has to be
-    behind database_sync_to_async or sync_to_async. For more, read
-    http://channels.readthedocs.io/en/latest/topics/consumers.html
-    """
-
     ##### WebSocket event handlers
 
     async def connect(self):
-        """
-        Called when the websocket is handshaking as part of initial connection.
-        """
-        # Are they logged in?
-        user=self.scope["user"]
-        if user.is_anonymous:
-            # Reject the connection
-            await self.close()
-        else:
-            # Accept the connection
-            await self.accept()
-        # Store which rooms the user has joined on this connection
-        self.rooms = set()
+        await self.accept()
+
 
     async def receive_json(self, content):
         """
@@ -40,15 +20,34 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         command = content.get("command", None)
         try:
             if command == "join":
-                await self.join_room(content)
+                user=self.scope["user"]
+                if user.is_anonymous:
+                    kernelName=content["kernelName"]
+                    registered=await utils.kernelRegistered(kernelName)
+                    if registered:
+                        utils.addKernel(kernelName)
+                    else:
+                        await self.close()
+       	        else:
+                    await self.join_room(content["room"])
             elif command == "leave":
                 # Leave the room
                 await self.leave_room(content["room"])
-            elif command == "send":
-                await self.send_room(content["room"], content["message"])
+            elif command == "sendMessage":
+                await self.send_room(content["room"], content["type"],content["message"])
+            elif command== "requestKernel":
+                await self.requestKernel(content["kernelName"], content["code"])
+            elif command== "sendResult":
+                await self.sendResult(content["user"],content["result"])
+            elif command== "sendInfoUser":
+                await self.sendInfoUser(content["user"],content["type"],content["message"])
+            elif command== "sendInfoRoom":
+                await self.sendInfoRoom(content["room"],content["type"],content["message"])
         except ClientError as e:
             # Catch any errors and send it back
             await self.send_json({"command": "inform","type":"alert","message":e.code})
+
+#========================================
 
     async def disconnect(self, code):
         """
@@ -62,18 +61,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 pass
 
     async def join_room(self, room_id):
-        room_id=content["room"]
-       	user=self.scope["user"]
-        if user.nature=="kernel":
-            sentKernelKey=content["kernelKey"]
-            if self.kernelKey==sentKernelKey:
-                await db.addKernel(user)
-        if user.nature=="human":
-            await db.addUser(user)
-        room = await get_room_or_error(room_id, self.scope["user"])
-        # Send a join message if it's turned on
-        if settings.NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-            await self.channel_layer.group_send(
+        user=self.scope["user"]
+        await utils.addUser(user)
+        room = await utils.get_room_or_error(room_id, self.scope["user"])
+
+
+        await self.channel_layer.group_send(
                 room.group_name,
                 {
                     "type": "chat.join",
@@ -99,7 +92,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         Called by receive_json when someone sent a leave command.
         """
         # The logged-in user is in our scope thanks to the authentication ASGI middleware
-        room = await get_room_or_error(room_id, self.scope["user"])
+        room = await utils.get_room_or_error(room_id, self.scope["user"])
         # Send a leave message if it's turned on
         if settings.NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
             await self.channel_layer.group_send(
@@ -130,7 +123,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         if room_id not in self.rooms:
             raise ClientError("ROOM_ACCESS_DENIED")
         # Get the room and send to the group about it
-        room = await get_room_or_error(room_id, self.scope["user"])
+        room = await utils.get_room_or_error(room_id, self.scope["user"])
         await self.channel_layer.group_send(
             room.group_name,
             {

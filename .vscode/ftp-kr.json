@@ -1,0 +1,16 @@
+{
+    "host": "145.239.197.103",
+    "username": "rdi",
+    "password": "R4ilftbu",
+    "remotePath": "/mnt/vdb",
+    "protocol": "ftp",
+    "port": 2222,
+    "fileNameEncoding": "utf8",
+    "autoUpload": false,
+    "autoDelete": false,
+    "autoDownload": false,
+    "ignore": [
+        ".git",
+        "/.vscode"
+    ]
+}

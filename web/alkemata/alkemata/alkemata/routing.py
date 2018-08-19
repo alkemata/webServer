@@ -6,6 +6,6 @@ from django.conf.urls import url
 
 application = ProtocolTypeRouter({
     'websocket':         URLRouter(
-            [url(r"^chat/stream/$", ChatConsumer),]
+            [url(r"^chat$", ChatConsumer),]
         ),
 })

@@ -10,7 +10,7 @@ const MessagesList = ({ messages }) => (
           key={message.id}
           {...message}
         />
-    ))}
+      ))}
     </ul>
   </section>
 )

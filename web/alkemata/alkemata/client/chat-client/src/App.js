@@ -6,6 +6,12 @@ import { AddMessage } from "./containers/AddMessage"
 import { Information } from "./containers/Information"
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.user=this.props.user
+    this.room=this.props.room
+  }
+
   render() {
     return (
       <div class="container-fluid">

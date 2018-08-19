@@ -1,5 +1,5 @@
 import * as types from '../constants/ActionTypes'
-import { messageReceived, populateUsersList,display_info } from '../actions'
+import { messageReceived, populateUsersList,displayInfo } from '../actions'
 
 const setupSocket = (dispatch) => {
   const socket = new WebSocket('ws://localhost:8989')
@@ -19,7 +19,7 @@ const setupSocket = (dispatch) => {
         dispatch(populateUsersList(data.users))
         break
 	 case 'INFO':
-	   dispatch(display_info(data.message,data.type))
+	   dispatch(displayInfo(data.message,data.type))
 	   break
       default:
         break

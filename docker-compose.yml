@@ -50,7 +50,8 @@ jupyter:
 redis:
   image: redis:3.0-alpine
 
-npm:
-  build: ./npm/
+node:
+  build: ./node/
   volumes:
-    - ./web/alkemata/alkemata/client:/usr/src/app 
+    - ./web/alkemata/alkemata/client/chat-client:/usr/src/app 
+  command: yarn build

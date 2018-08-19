@@ -2,10 +2,16 @@ from django.db import models
 from django.conf import settings
 from user.models import User
 
+
+class Kernel(models.Model):
+    name = models.CharField(max_length=255)
+
+
 class Message(models.Model):
-    content=models.TextField()
-    type=models.CharField(max_length=20)
-    creator=models.ForeignKey(User, on_delete=models.CASCADE)   
+    content = models.TextField()
+    type = models.CharField(max_length=20)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
 class Room(models.Model):
     """
@@ -14,9 +20,13 @@ class Room(models.Model):
 
     # Room title
     title = models.CharField(max_length=255)
-    connected_users=models.ManyToManyField(User,related_name='connected_users') #TODO wagtail user instead
-    creator=models.ForeignKey(User, related_name='creator',on_delete=models.CASCADE)
-    messages=models.ManyToManyField(Message)
+    connected_users = models.ManyToManyField(
+        User, related_name='connected_users')  #TODO wagtail user instead
+    connected_kernels = models.ManyToManyField(
+        Kernel, related_name='connected_kernels')
+    creator = models.ForeignKey(
+        User, related_name='creator', on_delete=models.CASCADE)
+    messages = models.ManyToManyField(Message)
 
     def get_latest_messages(self):
         return self.messages.order_by('-id')[:10]
