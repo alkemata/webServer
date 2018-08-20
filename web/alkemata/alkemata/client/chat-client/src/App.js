@@ -8,17 +8,18 @@ import { Information } from "./containers/Information"
 class App extends Component {
   constructor(props) {
     super(props);
-    this.user=this.props.user
-    this.room=this.props.room
+    this.user=this.props.user;
+    this.room=this.props.room;
+    console.log(this.user);
   }
 
   render() {
     return (
-      <div class="container-fluid">
-	<div class="col-4">
+      <div className="container-fluid">
+	<div className="col-4">
         <Sidebar />
 	</div>
-	<div class="col-8">
+	<div className="col-8">
         <section id="main">
 		<Information/>
           <MessagesList />
@@ -26,7 +27,7 @@ class App extends Component {
         </section>
 	</div>
       </div>
-    )
+    );
   }
 }
 

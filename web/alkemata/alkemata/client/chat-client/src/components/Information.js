@@ -2,31 +2,22 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 
-class Information extends React.Component {
+class InformationComponent extends React.Component {
   constructor(props) {
     super(props);
     this.message = this.props.message;
-    this.typ = this.props.typ;
+    this.typ = this.props.typmsg;
   }
   renderMsg(msg) {
-    if (this.typ === 'info') {
-      return (
-        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-          {msg}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    return (
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Console</span>
         </div>
-      );
-    }
-    if (this.typ === 'alert') {
-      return (<div class="alert alert-danger primary alert-dismissible fade show" role="alert">
-        {msg}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>);
-    }
+        <textarea class="form-control" aria-label="With textarea" rows="6" readonly>msg</textarea>
+      </div>
+    );
+
   }
 
   render() {
@@ -40,9 +31,9 @@ class Information extends React.Component {
   }
 }
 
-Information.propTypes = {
+InformationComponent.propTypes = {
   message: PropTypes.string.isRequired,
   typ: PropTypes.string.isRequired
 }
 
-export default Information
+export default InformationComponent

@@ -5,6 +5,7 @@ const setupSocket = (dispatch,room) => {
   const socket = new WebSocket('wss://192.168.56.2/ws/chat/'+room+'/')
 
   socket.onopen = () => {
+    console.log('opening socket');
     socket.send(JSON.stringify({
       type: 'VALIDE_CONNECTION'
     }))

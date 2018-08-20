@@ -8,6 +8,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     ##### WebSocket event handlers
 
     async def connect(self):
+        print('receiving connection')
         await self.accept()
 
 
@@ -18,6 +19,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         """
         # Messages will have a "command" key we can switch on
         command = content.get("command", None)
+        print("received message")
         try:
             if command == "join":
                 user=self.scope["user"]
@@ -25,7 +27,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                     kernelName=content["kernelName"]
                     registered=await utils.kernelRegistered(kernelName)
                     if registered:
-                        utils.addKernel(kernelName)
+                        utils.addKernel(content["room"],kernelName)
                     else:
                         await self.close()
        	        else:
@@ -62,7 +64,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def join_room(self, room_id):
         user=self.scope["user"]
-        await utils.addUser(user)
+        await utils.addUser(room_iduser)
         room = await utils.get_room_or_error(room_id, self.scope["user"])
 
 
@@ -115,7 +117,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             "leave": str(room.id),
         })
 
-    async def send_room(self, room_id, message):
+    async def send_room(self, room_id, typ, message):
         """
         Called by receive_json when someone sends a message to a room.
         """
@@ -127,7 +129,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.channel_layer.group_send(
             room.group_name,
             {
-                "type": "chat.message",
+                "type": typ,
                 "room_id": room_id,
                 "username": self.scope["user"].username,
                 "message": message,

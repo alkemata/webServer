@@ -23,4 +23,4 @@ bleach
 django-debug-toolbar
 django-template-debug
 channels
-asgi_redis
+channels_redis

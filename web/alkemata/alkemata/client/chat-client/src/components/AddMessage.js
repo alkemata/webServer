@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Editor, EditorState, convertToRaw } from 'draft-js';
 
 
-class AddMessage extends React.Component {
+class AddMessageComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = { editorState: EditorState.createEmpty() };
@@ -29,8 +29,8 @@ class AddMessage extends React.Component {
 
 
 
-AddMessage.propTypes = {
+AddMessageComponent.propTypes = {
   dispatch: PropTypes.func.isRequired
 }
 
-export default AddMessage
+export default AddMessageComponent

@@ -9,26 +9,28 @@ import App from './App'
 import reducers from './reducers'
 import handleNewMessage from './sagas'
 import setupSocket from './sockets'
-import { AppContainer } from 'react-hot-loader';
-//import registerServiceWorker from './registerServiceWorker';
+import EditorState from 'draft-js';
 
-const sagaMiddleware = createSagaMiddleware()
+const defaultState = {
+  editorState: EditorState,
+listMessages: {},
+info: ""
+};
 
+const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
-  reducers,
+  reducers,defaultState,
   applyMiddleware(sagaMiddleware)
 )
+console.log(window.props.room);
+const socket = setupSocket(store.dispatch, window.props.room);
+console.log('socket opened');
+sagaMiddleware.run(handleNewMessage, { socket });
 
-const socket = setupSocket(store.dispatch,window.room)
-sagaMiddleware.run(handleNewMessage, { socket })
-
-
-const render = Component => {
+console.log('rendering');
+ReactDOM.render(
   <Provider store={store}>
     <App {...window.props} />
-  </Provider> ,
-    document.getElementById('react')
-}
-
-
-render(App);
+  </Provider>,
+  document.getElementById('react')
+)
