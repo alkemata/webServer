@@ -1,8 +1,8 @@
 import * as types from '../constants/ActionTypes'
 import { messageReceived, populateUsersList,displayInfo } from '../actions'
 
-const setupSocket = (dispatch) => {
-  const socket = new WebSocket('ws://localhost:8989')
+const setupSocket = (dispatch,room) => {
+  const socket = new WebSocket('wss://192.168.56.2/ws/chat/'+room+'/')
 
   socket.onopen = () => {
     socket.send(JSON.stringify({

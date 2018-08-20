@@ -36,3 +36,6 @@ git push -u origin master # assuming your are on the master branch.
 
 npm
 npm install
+
+ yarn global add create-react-app
+ 

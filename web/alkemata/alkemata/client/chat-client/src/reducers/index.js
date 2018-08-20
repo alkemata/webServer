@@ -5,7 +5,7 @@ import info from './info'
 import EditorState from 'draft-js';
 
 const defaultState = {
-  editorState: EditorState.createEmpty(),
+  editorState: EditorState,
 listMessages: {}
 };
 

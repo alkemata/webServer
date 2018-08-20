@@ -4,12 +4,13 @@
 
 {% block content %} 
     <div id="react">Loading...{{ user }} - {{ room }}</div>
+
+    <script>
+        var user = '{{ user }}';
+        var room = '{{ room }}';  
+        window.props={"user":user,"room":room};
+    </script>
+    <script src="{% static 'index_bundle.js' %}"></script>
 {% endblock %}
- {% block scripts %}
-<script>
-    var user = {{ user }};
-    var room = {{ room }};  
-    window.props={"user":user,"room":room};
-</script>
-<script src="{% static 'index_bundle.js' %}"></script>
- {% endblock scripts %}
+
+

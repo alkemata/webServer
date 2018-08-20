@@ -49,6 +49,8 @@ jupyter:
 
 redis:
   image: redis:3.0-alpine
+  ports:
+    - "6379:6379"
 
 node:
   build: ./node/
