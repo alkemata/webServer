@@ -7,17 +7,21 @@ const setupSocket = (dispatch,room) => {
   socket.onopen = () => {
     console.log('opening socket');
     socket.send(JSON.stringify({
-      type: 'VALIDE_CONNECTION'
+      command: 'join',
+      room: room
     }))
   }
   socket.onmessage = (event) => {
+    console.log('receiving message');
     const data = JSON.parse(event.data)
-    switch (data.type) {
+    console.log(data);
+    switch (data.command) {
       case types.ADD_MESSAGE:
         dispatch(messageReceived(data.message, data.author))
         break
       case types.USERS_LIST:
-        dispatch(populateUsersList(data.users))
+      console.log('receiving userList');
+        dispatch(populateUsersList(data.userList))
         break
 	 case 'INFO':
 	   dispatch(displayInfo(data.message,data.type))

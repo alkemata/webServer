@@ -10,11 +10,11 @@ class InformationComponent extends React.Component {
   }
   renderMsg(msg) {
     return (
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Console</span>
+      <div className="input-group">
+        <div className="input-group-prepend">
+          <span className="input-group-text">Console</span>
         </div>
-        <textarea class="form-control" aria-label="With textarea" rows="6" readonly>msg</textarea>
+        <textarea className="form-control" aria-label="With textarea" rows="6" readOnly>msg</textarea>
       </div>
     );
 
@@ -31,9 +31,5 @@ class InformationComponent extends React.Component {
   }
 }
 
-InformationComponent.propTypes = {
-  message: PropTypes.string.isRequired,
-  typ: PropTypes.string.isRequired
-}
 
 export default InformationComponent

@@ -25,13 +25,19 @@ def get_room_or_error(room_id, user):
 
 @database_sync_to_async
 def addUser(room_id,user):
-		Room.objects.get(title=room_id).connected_users.add(user)
+    room=Room.objects.get(title=room_id)
+    if not(room.connected_users.filter(pk=user.pk).exists()):
+	    room.connected_users.add(user)
 
 @database_sync_to_async
 def kernelRegistered(kernelName):
-		return Kernel.objects.filter(name=kernelName).exists()
+	return Kernel.objects.filter(name=kernelName).exists()
 
 @database_sync_to_async
 def addKernel(room_id,kernelName):
-		Room.objects.get(title=room_id).connected_users.add(Kernel.objects.get(name=kernelName))
+	Room.objects.get(title=room_id).connected_users.add(Kernel.objects.get(name=kernelName))
 
+@database_sync_to_async
+def getUsers(room_id):
+    results=Room.objects.get(title=room_id).connected_users.all().values_list('username', flat=True) 
+    return results

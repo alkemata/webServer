@@ -6,20 +6,20 @@ const nextUserId = 0
 export const addMessage = (message, author) => ({
   type: types.ADD_MESSAGE,
   id: nextMessageId++,
-  message,
-  author
+  message:message,
+  author:author
 })
 
 export const messageReceived = (message, author) => ({
   type: types.MESSAGE_RECEIVED,
   id: nextMessageId++,
-  message,
-  author
+  message:message,
+  author:author
 })
 
 export const populateUsersList = users => ({
   type: types.USERS_LIST,
-  users
+  users:users
 })
 
 export const displayInfo = (message,typemsg) => ({

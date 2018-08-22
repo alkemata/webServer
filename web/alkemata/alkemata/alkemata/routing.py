@@ -4,9 +4,10 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from chat.consumers import ChatConsumer
 from django.conf.urls import url
 import chat.routing
+from channels.auth import AuthMiddlewareStack
 
 application = ProtocolTypeRouter({
-    'websocket':         URLRouter(
+    'websocket':       AuthMiddlewareStack(  URLRouter(
             chat.routing.websocket_urlpatterns
-        ),
+        )),
 })

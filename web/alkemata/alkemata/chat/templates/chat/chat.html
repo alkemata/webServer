@@ -6,7 +6,7 @@
     <div id="react">Loading...{{ user }} - {{ room }}</div>
 
     <script>
-        var user = '{{ user }}';
+        var user = '{{ user.username }}';
         var room = '{{ room }}';  
         window.props={"user":user,"room":room};
     </script>

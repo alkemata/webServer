@@ -3,7 +3,7 @@ from .models import Room
 from django.db.models import Count 
 
 def chat(request,room_name):
-    return render(request, 'chat/chat.html', {"user":request.user.username,"room":room_name})
+    return render(request, 'chat/chat.html', {"room":room_name})
 
 
 def chatIndex(request):

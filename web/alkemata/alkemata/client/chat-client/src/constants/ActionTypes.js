@@ -1,5 +1,7 @@
 export const ADD_MESSAGE = 'ADD_MESSAGE'
 export const MESSAGE_RECEIVED = 'MESSAGE_RECEIVED'
 export const ADD_USER = 'ADD_USER'
+export const ADD_KERNEL = 'ADD_KERNEL'
 export const USERS_LIST = 'USERS_LIST'
+export const KERNELS_LIST = 'KERNELS_LIST'
 export const DISPLAY_INFO = 'DISPLAY_INFO'

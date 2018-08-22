@@ -10,6 +10,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         print('receiving connection')
         await self.accept()
+        self.rooms = set()
 
 
     async def receive_json(self, content):
@@ -19,11 +20,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         """
         # Messages will have a "command" key we can switch on
         command = content.get("command", None)
-        print("received message")
+        print("received message "+self.scope["user"].username)
         try:
             if command == "join":
                 user=self.scope["user"]
                 if user.is_anonymous:
+                    print("anonymous user connecting")
                     kernelName=content["kernelName"]
                     registered=await utils.kernelRegistered(kernelName)
                     if registered:
@@ -31,6 +33,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                     else:
                         await self.close()
        	        else:
+                    print("user connecting")
                     await self.join_room(content["room"])
             elif command == "leave":
                 # Leave the room
@@ -64,15 +67,14 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def join_room(self, room_id):
         user=self.scope["user"]
-        await utils.addUser(room_iduser)
+        await utils.addUser(room_id,user)
         room = await utils.get_room_or_error(room_id, self.scope["user"])
 
 
         await self.channel_layer.group_send(
                 room.group_name,
                 {
-                    "type": "chat.join",
-                    "room_id": room_id,
+                    "command": "addUser",
                     "username": self.scope["user"].username,
                 }
             )
@@ -84,9 +86,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             self.channel_name,
         )
         # Instruct their client to finish opening the room
+        usrslist=list(await utils.getUsers(room_id))
         await self.send_json({
-            "join": str(room.id),
-            "title": room.title,
+            "command": "USERS_LIST",
+            "userList": usrslist,
         })
 
     async def leave_room(self, room_id):
