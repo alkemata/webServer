@@ -1,11 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-const SidebarComponent = ({ users }) => (
+const SidebarComponent = ({ users,kernels }) => (
   <aside id="sidebar" className="sidebar">
     <ul>
       {users.map(user => (
-        <li>{user.name}</li>
+        <li>{user}</li>
       ))}
     </ul>
   </aside>

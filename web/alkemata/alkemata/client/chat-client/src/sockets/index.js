@@ -20,7 +20,7 @@ const setupSocket = (dispatch,room) => {
         dispatch(messageReceived(data.message, data.author))
         break
       case types.USERS_LIST:
-      console.log('receiving userList');
+ 
         dispatch(populateUsersList(data.userList))
         break
 	 case 'INFO':
