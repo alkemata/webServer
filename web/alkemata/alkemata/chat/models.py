@@ -5,7 +5,7 @@ from user.models import User
 
 class Kernel(models.Model):
     name = models.CharField(max_length=255)
-
+    owner=models.ForeignKey(User, on_delete=models.CASCADE,default=1)
 
 class Message(models.Model):
     content = models.TextField()

@@ -1,12 +1,13 @@
 import * as types from '../constants/ActionTypes'
-import {List} from 'immutable'
+import Immutable from 'immutable'
 
-const users = (state = [], action) => {
+const users = (state =[], action) => {
   switch (action.type) {
     case types.USERS_LIST:
-      var state2=state.set('users',List(action.users));
-      console.log(state2.toJS());
-      return state2
+     state=Immutable.List(action.users);
+      return state
+     case types.ADD_USER:
+	 return state.push(action.user);
     default:
       return state
   }

@@ -5,5 +5,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.chatIndex, name='index'),
-    url(r'^(?P<room_name>[^/]+)/$', views.chat, name='room'),
+        url(r'^Kernel/', views.chatKernel, name='kernel'),
+    url(r'^Chat/(?P<room_name>[^/]+)/$', views.chat, name='room'),
 ]

@@ -1,14 +1,11 @@
+import {emptyMarkdownCell,appendCellToNotebook,toJS} from '@nteract/commutable'
+
 const messages = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_MESSAGE':
     case 'MESSAGE_RECEIVED':
-      return state.concat([
-        {
-          message: action.message,
-          author: action.author,
-          id: action.id
-        }
-      ])
+    let newcell=emptyMarkdownCell;
+    newcell=newcell.set("source",action.message) 
+      return appendCellToNotebook(state,newcell)
     default:
       return state
   }

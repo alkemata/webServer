@@ -1,11 +1,13 @@
-# Copyright (c) Jupyter Development Team.
-# Distributed under the terms of the Modified BSD License.
+FROM python
 
-# start from the jupyter image with R, Python, and Scala (Apache Toree) kernels pre-installed
-FROM jupyter/scipy-notebook:latest
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-# install the kernel gateway
-RUN pip install 'jupyter_kernel_gateway==0.5'
-
-# run kernel gateway on container start, not notebook server
-EXPOSE 8888
+COPY requirements.txt /usr/src/app/
+RUN pip install -r requirements.txt
+RUN python -m ipykernel install --user
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV LANG en_US.UTF-8
+ENV PYTHONIOENCODING utf_8
+ENV REDIS_HOST "redis"

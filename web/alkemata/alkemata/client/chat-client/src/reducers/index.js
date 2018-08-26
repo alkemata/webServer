@@ -6,10 +6,10 @@ import info from './info'
 
 
 const reducers = combineReducers({
-  messages,
-  info,
-  users,
-kernels
+  messages:messages,
+  info:info,
+  users:users,
+  kernels:kernels
 })
 
 export default reducers

@@ -6,6 +6,7 @@
 {% block body_class %}template-homepage{% endblock %}
 
 {% block content %}
+</div>
 <form action="/chat/" method="post">{% csrf_token %}
   <div class="form-group">
     <label for="roomName">Create a new room:</label>
@@ -15,16 +16,37 @@
   <button type="submit" class="btn btn-primary">Create</button>
 </form>
 
+<form action="/chat/Kernel/" method="post">{% csrf_token %}
+  <div class="form-group">
+    <label for="kernelName">Add a Kernel:</label>
+    <input type="text" class="form-control" id="kernel" name ="kernel" aria-describedby="kernelHelp" placeholder="kernel name">
+    <small id="kernelHelp" class="form-text text-muted">Enter the name of your Kernel</small>
+  </div>
+  <button type="submit" class="btn btn-primary">Add</button>
+</form>
+
 <h3>List of existing rooms</h3>
-<ul class="list-group">
+<ul class="list-group list-group-flush">
 {% for room in rooms%}
-<a href="/chat/{{room.title}}" class="list-group-item list-group-item-action justify-content-between align-items-center">
+<li class="list-group-item"></li>
+<a href="/chat/Chat/{{room.title}}" class="list-group-item list-group-item-action justify-content-between align-items-center">
     {{room.title}}
     <span class="badge badge-primary badge-pill">{{room.connected_count}}</span>
   </a>
+  </li>
 {% endfor%}
 </ul>
 
+<h3>List of registered Kernels</h3>
+<ul class="list-group list-group-flush">
+  {% for kernel in kernels%}
+  <li class="list-group-item">
+      {{kernel.name}}
+      </li>
+
+  {% endfor%}
+  </ul>
+</div>
 
 {% endblock %}
 

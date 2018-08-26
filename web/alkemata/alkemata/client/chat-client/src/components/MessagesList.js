@@ -1,18 +1,13 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import Message from './Message'
+import NotebookPreview from "@nteract/notebook-preview";
 
 const MessagesListComponent = ({ messages }) => (
-  <section id="messages-list">
-    <ul>
-      {messages.map(message => (
-        <Message
-          key={message.id}
-          {...message}
-        />
-      ))}
-    </ul>
-  </section>
+
+ <div className="inbox_chat w-100">
+<NotebookPreview
+  notebook={messages}
+/>
+</div>
 )
 
 

@@ -1,36 +1,90 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-
-import { Editor, EditorState, convertToRaw } from 'draft-js';
-
+import Display from '@nteract/display-area'
+import commutable from  '@nteract/commutable'
 
 class AddMessageComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { editorState: EditorState.createEmpty() };
+    this._handleEditor = this._handleEditor.bind(this);
+    this._onSendClick = this._onSendClick.bind(this);
+    this._handleMode = this._handleMode.bind(this);
+    this._handleKernel = this._handleKernel.bind(this);
+    this.state = {
+      editorState: "",
+      outputs: [],
+      selectedKernel: 'None',
+      mode: 'raw'
+    };
   }
 
-  _onSendClick() {
-    this.props.dispatch(convertToRaw(this.state.editorState.getCurrentContent()), 'Me')
+  _handleEditor(event) {
+    this.setState({ editorState: event.currentTarget.value });
+  }
+
+  _onSendClick(event) {
+    event.preventDefault()
+    let text=this.state.editorState;
+    this.props.dispatchMessage(text);
+    this.setState({editorState:""});
+  }
+
+  _handleMode(event) {
+    this.setState({ mode: event.currentTarget.value });
+  }
+
+  _handleKernel(event) {
+    //  this.props.dispatch(convertToRaw(this.state.editorState.getCurrentContent()), 'Me');
+  }
+
+  displayKernels(kernels) {
+    if (kernels.length == 0) {  return null }
+    else {
+      const listItems = kernels.map((kernel) =>
+        <option value={kernel}>{kernel}</option>
+      );
+      return (
+        <div className="form-group col-md-4">
+          <label>Kernel
+          <select id="inputKernel" className="form-control" value={this.state.selectedKernel} onChange={this._handleKernel}>
+              {listItems}
+            </select>
+          </label>
+        </div>
+      )
+    }
+  };
+
+  displayKernelButton(type) {
+    if (this.state.mode == "raw") { console.log('no button'); return null }
+    else {
+      return (
+        <button onClick={this._onKernelClick} className="btn btn-primary">>Evaluate</button>
+      )
+    }
   }
 
   render() {
     return (
-      <div>
-        <button onClick={this._onSendClick.bind(this)}>Send</button>
-        <Editor
-          editorState={this.state.editorState}
-        />
-      </div>
-    );
+        <form className="w-100">
+          <div className="form-group w-100">
+            <textarea className="w-100" id="editor" rows="4" onChange={this._handleEditor} value={this.state.editorState} />
+          </div>
+          <div className="form-inline">
+            <button onClick={this._onSendClick} className="btn btn-primary mb-2 mr-sm-2">>Send</button>
+            {this.displayKernelButton(this.state.mode)}
+            <label>Mode
+            <select id="inputMode" className="form-control" value={this.state.mode} onChange={this._handleMode}>
+                <option value='raw'>raw</option>
+                <option value='code'>code</option>
+              </select>
+            </label>
+            {this.displayKernels(this.props.kernels)}
+          </div>
+        </form>
+        /* <Display outputs={this.state.outputs} />*/
+    )
   }
 }
 
-
-
-
-AddMessageComponent.propTypes = {
-  dispatch: PropTypes.func.isRequired
-}
 
 export default AddMessageComponent

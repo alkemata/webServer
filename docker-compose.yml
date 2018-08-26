@@ -40,12 +40,10 @@ postgres:
     - "5432:5432"
 
 jupyter:
-  image: jupyter/scipy-notebook:latest
-  ports:
-    - "8888:8888"
+  build: ./jupyter/
   volumes:
-    - ./kernelClient:/home/jovyan/notebooks
-  command: jupyter kernelgateway --KernelGatewayApp.ip=0.0.0.0 --KernelGatewayApp.port=8888
+    - ./kernelClient:/usr/src/app
+  command: python client.py
 
 redis:
   image: redis:3.0-alpine

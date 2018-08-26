@@ -1,0 +1,2 @@
+ROOM="testroom"
+KERNELNAME="kerneltest"

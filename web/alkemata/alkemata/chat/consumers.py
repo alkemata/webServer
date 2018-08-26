@@ -30,6 +30,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                     registered=await utils.kernelRegistered(kernelName)
                     if registered:
                         utils.addKernel(content["room"],kernelName)
+                        print('Kernel added')
                     else:
                         await self.close()
        	        else:
@@ -39,7 +40,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 # Leave the room
                 await self.leave_room(content["room"])
             elif command == "sendMessage":
-                await self.send_room(content["room"], content["type"],content["message"])
+                await self.send_message(content["room"], content["message"])
             elif command== "requestKernel":
                 await self.requestKernel(content["kernelName"], content["code"])
             elif command== "sendResult":
@@ -91,6 +92,21 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             "command": "USERS_LIST",
             "userList": usrslist,
         })
+
+    async def send_message(self,room_id,message):
+        author=self.scope["user"]
+        room = await utils.get_room_or_error(room_id, self.scope["user"])
+        print("message in : "+message+room_id)
+        await self.channel_layer.group_send(
+            room.group_name,
+            {
+                "type": "chat.message",
+                "command":"MESSAGE_RECEIVED",
+                "message":message,
+                "username":author.username,
+                "room":room_id
+            })
+        print("message sent")
 
     async def leave_room(self, room_id):
         """
@@ -175,8 +191,8 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # Send a message down to the client
         await self.send_json(
             {
-                "msg_type": settings.MSG_TYPE_MESSAGE,
-                "room": event["room_id"],
+                "room": event["room"],
+                "command": event["command"],
                 "username": event["username"],
                 "message": event["message"],
             },

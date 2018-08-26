@@ -39,3 +39,28 @@ npm install
 
  yarn global add create-react-app
  
+
+ tmux
+
+ -new session
+ tmux new -s myname
+ -attach to new session:
+ tmux a -t myname
+- list sessions:
+tmux ls
+
+dans la session: ctrl+b
+windows:
+c  create window
+w  list windows
+n  next window
+p  previous window
+f  find window
+,  name window
+&  kill window
+
+panels:
+%  vertical split
+"  horizontal split
+
+scroll: Ctrl - b then [  and q to quit

@@ -56,7 +56,9 @@
     "redux-immutable":"4.0.0",
     "immutable":"3.8.2",
     "@nteract/commutable":"4.1.1",
-    "@nteract/notebook-preview":"7.4.5"
+    "@nteract/notebook-preview":"7.4.5",
+    "@nteract/display-area":"4.4.3",
+    "styled-jsx": "3.0.2"
   },
   "scripts": {
     "start":  "webpack-dev-server --config ./config/webpackDevServer.config.js",
