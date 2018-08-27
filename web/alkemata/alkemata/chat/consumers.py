@@ -42,7 +42,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             elif command == "sendMessage":
                 await self.send_message(content["room"], content["message"])
             elif command== "requestKernel":
-                await self.requestKernel(content["kernelName"], content["code"])
+                await self.requestKernel(content["room"],content["kernelName"], content["code"])
             elif command== "sendResult":
                 await self.sendResult(content["user"],content["result"])
             elif command== "sendInfoUser":
@@ -97,6 +97,21 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         author=self.scope["user"]
         room = await utils.get_room_or_error(room_id, self.scope["user"])
         print("message in : "+message+room_id)
+        await self.channel_layer.group_send(
+            room.group_name,
+            {
+                "type": "chat.message",
+                "command":"MESSAGE_RECEIVED",
+                "message":message,
+                "username":author.username,
+                "room":room_id
+            })
+        print("message sent")
+
+    async def requestKernel(self,room_id,kernel,message):
+        author=self.scope["user"]
+        room = await utils.get_room_or_error(room_id, self.scope["user"])
+        print("kernel request : "+message+room_id)
         await self.channel_layer.group_send(
             room.group_name,
             {

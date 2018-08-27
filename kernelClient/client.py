@@ -40,7 +40,6 @@ class TestClient(ThreadedKernelClient):
 
 class MyWebSocketApp(WebSocketApp):
 
-
     def dispatch(self,msg):
         header=msg["header"]
         content=msg["content"]
