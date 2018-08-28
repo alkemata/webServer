@@ -6,7 +6,7 @@ export const addMessage = (message) => ({
   message: message
 })
 
-export const kernelCommand = (kernel, command) => ({
+export const kernelCommand = (command,kernel) => ({
   type: types.KERNEL_COMMAND,
   command: command,
   kernel: kernel
@@ -18,10 +18,9 @@ export const activeKernel = (kernel) => ({
 })
 
 
-export const kernelResult = (kernel, result) => ({
+export const kernelResult = ( result) => ({
   type: types.KERNEL_RESULT,
   result: result,
-  kernel: kernel
 })
 
 export const addUser = (user) => ({
@@ -59,4 +58,9 @@ export const displayInfo = (message) => ({
 export const changeMode = (mode) => ({
   type: types.CHANGE_MODE,
   mode: mode
+})
+
+export const changeKernelState = (state) => ({
+  type: types.CHANGE_KERNEL_STATE,
+  state: state
 })

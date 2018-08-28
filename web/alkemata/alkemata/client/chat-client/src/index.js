@@ -8,7 +8,7 @@ import {emptyNotebook,toJS} from '@nteract/commutable'
 import './index.css'
 import App from './App'
 import reducers from './reducers'
-import handleNewMessage from './sagas'
+import rootSaga from './sagas'
 import setupSocket from './sockets'
 import Immutable from 'immutable';
 
@@ -18,7 +18,8 @@ const defaultState = Immutable.Map({
   messages: notebook,
   info: "",
   users: Immutable.List([]),
-  kernels: Immutable.List([])
+  kernels: Immutable.List([]),
+  editor: Immutable.Map({state:"",results:Immutable.List([])})
 }
 );
 
@@ -31,7 +32,7 @@ const store = createStore(
 )
 const socket = setupSocket(store.dispatch, window.props.room);
 const room=window.props.room;
-sagaMiddleware.run(handleNewMessage, { socket,room });
+sagaMiddleware.run(rootSaga, { socket,room });
 ReactDOM.render(
   <Provider store={store}>
     <App {...window.props} />

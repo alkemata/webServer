@@ -29,7 +29,20 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                     kernelName=content["kernelName"]
                     registered=await utils.kernelRegistered(kernelName)
                     if registered:
-                        utils.addKernel(content["room"],kernelName)
+                        await utils.addKernel(content["room"],kernelName)
+                        await self.channel_layer.group_add(
+            			    kernelName,
+            			    self.channel_name,
+        				    )
+                        owner=await utils.getOwner(kernelName)
+                        self.owner=owner
+                        await self.channel_layer.group_send(
+                            owner,
+                            {
+                            "type": "chat.message",
+                            "command": "ADD_KERNEL",
+                            "kernel": kernelName,
+                            } )
                         print('Kernel added')
                     else:
                         await self.close()
@@ -43,10 +56,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 await self.send_message(content["room"], content["message"])
             elif command== "requestKernel":
                 await self.requestKernel(content["room"],content["kernelName"], content["code"])
-            elif command== "sendResult":
-                await self.sendResult(content["user"],content["result"])
-            elif command== "sendInfoUser":
-                await self.sendInfoUser(content["user"],content["type"],content["message"])
+            elif command== "resultKernel":
+                await self.sendResult(self.owner,content["result"])
+            elif command== "infoKernel":
+                await self.sendInfoUser(self.owner,content["message"])
+            elif command== "changeKernelState":
+                await self.changeKernelState(self.owner,content["state"])
             elif command== "sendInfoRoom":
                 await self.sendInfoRoom(content["room"],content["type"],content["message"])
         except ClientError as e:
@@ -74,9 +89,9 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
         await self.channel_layer.group_send(
                 room.group_name,
-                {
-                    "command": "addUser",
-                    "username": self.scope["user"].username,
+                {"type": "chat.message",
+                  "command": "ADD_USER",
+                  "username": self.scope["user"].username,
                 }
             )
         # Store that we're in the room
@@ -86,11 +101,21 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             room.group_name,
             self.channel_name,
         )
+
+        await self.channel_layer.group_add(
+            self.scope["user"].username,
+            self.channel_name,
+        )
         # Instruct their client to finish opening the room
         usrslist=list(await utils.getUsers(room_id))
+        kernellist=list(await utils.getKernels(room_id,self.scope["user"]))
         await self.send_json({
             "command": "USERS_LIST",
             "userList": usrslist,
+        })
+        await self.send_json({
+            "command": "KERNELS_LIST",
+            "kernelList": kernellist,
         })
 
     async def send_message(self,room_id,message):
@@ -108,20 +133,46 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             })
         print("message sent")
 
-    async def requestKernel(self,room_id,kernel,message):
+    async def requestKernel(self,room_id,kernel,code):
         author=self.scope["user"]
-        room = await utils.get_room_or_error(room_id, self.scope["user"])
-        print("kernel request : "+message+room_id)
         await self.channel_layer.group_send(
-            room.group_name,
+            kernel,
             {
                 "type": "chat.message",
-                "command":"MESSAGE_RECEIVED",
-                "message":message,
+                "command":"kernel_request",
+                "code":code,
                 "username":author.username,
                 "room":room_id
             })
-        print("message sent")
+        print("Kernel request sent")
+
+
+    async def sendResult(self,user,result):
+        await self.channel_layer.group_send(
+            user,
+            {
+                "type": "chat.message",
+                "command":"KERNEL_RESULT",
+                "result":result,
+            })
+
+    async def changeKernelState(self,user,state):
+        await self.channel_layer.group_send(
+            user,
+            {
+                "type": "chat.message",
+                "command":"CHANGE_KERNEL_STATE",
+                "state":state,
+            })
+
+    async def sendInfoUser(self,user,message):
+        await self.channel_layer.group_send(
+            user,
+            {
+                "type": "chat.message",
+                "command":"INFO",
+                "message":message,
+            })
 
     async def leave_room(self, room_id):
         """
@@ -204,11 +255,4 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         Called when someone has messaged our chat.
         """
         # Send a message down to the client
-        await self.send_json(
-            {
-                "room": event["room"],
-                "command": event["command"],
-                "username": event["username"],
-                "message": event["message"],
-            },
-        )
+        await self.send_json(event,)

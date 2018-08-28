@@ -35,9 +35,19 @@ def kernelRegistered(kernelName):
 
 @database_sync_to_async
 def addKernel(room_id,kernelName):
-	Room.objects.get(title=room_id).connected_users.add(Kernel.objects.get(name=kernelName))
+	Room.objects.get(title=room_id).connected_kernels.add(Kernel.objects.get(name=kernelName))
+
+@database_sync_to_async
+def getOwner(kernelName):
+    return Kernel.objects.get(name=kernelName).owner.username
+
 
 @database_sync_to_async
 def getUsers(room_id):
     results=Room.objects.get(title=room_id).connected_users.all().values_list('username', flat=True) 
+    return results
+
+@database_sync_to_async
+def getKernels(room_id,owner):
+    results=Room.objects.get(title=room_id).connected_kernels.filter(owner=owner).values_list('name', flat=True) 
     return results

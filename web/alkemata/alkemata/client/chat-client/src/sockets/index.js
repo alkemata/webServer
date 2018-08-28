@@ -1,11 +1,11 @@
 import * as types from '../constants/ActionTypes'
-import { messageReceived, populateUsersList, displayInfo, addUser, kernelResult, addKernel } from '../actions'
+import {changeKernelState,populateKernelsList,messageReceived, populateUsersList, displayInfo, addUser, kernelResult, addKernel } from '../actions'
 
 const setupSocket = (dispatch, room) => {
   const socket = new WebSocket('wss://192.168.56.2/ws/chat/' + room + '/')
 
   socket.onopen = () => {
-    console.log('opening socket');
+	dispatch(displayInfo('connexion with server established'));
     socket.send(JSON.stringify({
       command: 'join',
       room: room
@@ -22,6 +22,9 @@ const setupSocket = (dispatch, room) => {
       case types.USERS_LIST:
         dispatch(populateUsersList(data.userList))
         break
+      case types.KERNELS_LIST:
+        dispatch(populateKernelsList(data.kernelList))
+        break
       case types.INFO:
         dispatch(displayInfo(data.message))
         break
@@ -32,7 +35,10 @@ const setupSocket = (dispatch, room) => {
         dispatch(addKernel(data.kernel))
         break
       case types.KERNEL_RESULT:
-        dispatch(kernelResult(data.kernel, data.result))
+        dispatch(kernelResult( data.result))
+        break
+      case types.CHANGE_KERNEL_STATE:
+        dispatch(changeKernelState( data.state))
         break
       default:
         break

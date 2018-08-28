@@ -6,9 +6,11 @@ from traitlets import Type, Instance
 import ssl
 
 def on_message(ws, message):
+    print('message received')
     data=json.loads(message)
+    print(data)
     command=data["command"]
-    if command=="execute":
+    if command=="kernel_request":
 	    ws.kernel_client.execute(data["code"])
 
 def on_error(ws, error):
@@ -22,14 +24,11 @@ def on_open(ws):
     message={"command":"join","room":"testroom2","kernelName":"python3"}
     ws.send(json.dumps(message))
 
-def dispatchKernel(msg):
-    message={"command":"sendResult","kernelName":"python3","result":msg}  
-    ws.send(json.dumps(message))	
-
 class TestChannel(ThreadedZMQSocketChannel):
 
     def call_handlers(self, msg):
-        self.ws.dispatch(msg)
+        ws=self.ws
+        ws.dispatch(msg)
 
 
 class TestClient(ThreadedKernelClient):
@@ -41,17 +40,25 @@ class TestClient(ThreadedKernelClient):
 class MyWebSocketApp(WebSocketApp):
 
     def dispatch(self,msg):
+        print(msg)
         header=msg["header"]
         content=msg["content"]
         msg_type=header["msg_type"]
         if msg_type=="execute_reply":
             status=content["status"]
-            self.send({"command":"infoKernel","status":status})
+            self.send(json.dumps({"command":"infoKernel","status":status}))
         elif msg_type=="display_data":
-	        data=content["data"]
-	        self.send({"command":"resultKernel","data":data})
-
-
+	        content["output_type"]="display_data"
+	        self.send(json.dumps({"command":"resultKernel","result":content}))
+        elif msg_type=="status":
+	        state=content["execution_state"]
+	        self.send(json.dumps({"command":"changeKernelState","state":state}))
+        elif msg_type=="stream":
+	        content["output_type"]="stream"
+	        self.send(json.dumps({"command":"resultKernel","result":content}))
+        elif msg_type=="execute_result":
+	        content["output_type"]="execute_result"
+	        self.send(json.dumps({"command":"resultKernel","result":content}))
 
 if __name__ == "__main__":
 
@@ -62,7 +69,7 @@ if __name__ == "__main__":
     kernel_client.start_channels(shell=True,iopub=True,stdin=False,hb=False)
     print('Channels started')
     print(kernel_client.channels_running)
-   # enableTrace(True)
+    #enableTrace(True)
     ws = MyWebSocketApp("wss://192.168.56.2/ws/chat/testroom2/",
                               on_message = on_message,
                               on_error = on_error,
@@ -75,6 +82,4 @@ if __name__ == "__main__":
     print('ws linked to kernel')
     
     ws.on_open = on_open
-    ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
-
-    
+    ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE},ping_timeout=100.0)
