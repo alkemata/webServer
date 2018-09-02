@@ -20,7 +20,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         """
         # Messages will have a "command" key we can switch on
         command = content.get("command", None)
-        print("received message "+self.scope["user"].username)
+        print("received message with command :  "+command)
         try:
             if command == "join":
                 user=self.scope["user"]

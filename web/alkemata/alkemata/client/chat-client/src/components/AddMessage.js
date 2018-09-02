@@ -1,5 +1,5 @@
 import React from 'react'
-import Display from '@nteract/display-area'
+import {Display} from '@nteract/display-area'
 
 class AddMessageComponent extends React.Component {
   constructor(props) {
@@ -38,14 +38,14 @@ class AddMessageComponent extends React.Component {
     this.setState({ mode: event.currentTarget.value });
   }
 
-_handleKernel(event){
-this.setState({selectedKernel:event.currentTarget.value})
-}
+  _handleKernel(event) {
+    this.setState({ selectedKernel: event.currentTarget.value })
+  }
 
   _onKernelClick(event) {
     event.preventDefault()
     let text = this.state.editorState;
-    this.props.dispatchCommand(text,this.state.selectedKernel);
+    this.props.dispatchCommand(text, this.state.selectedKernel);
     //  this.props.dispatch(convertToRaw(this.state.editorState.getCurrentContent()), 'Me');
   }
 
@@ -76,13 +76,13 @@ this.setState({selectedKernel:event.currentTarget.value})
     }
   }
 
-  displayRender(results){
-    if (results.size > 0) { return <Display outputs={results} /> }
-else { return null }
+  displayResult(results) {
+    if (results.length > 0) {return (<Display outputs={results} />) }
+    else {  return <div></div>; }
   }
 
-render() {
-  return (
+  render() {
+    return(
     <form className="w-100">
       <div className="form-group w-100">
         <textarea className="w-100" id="editor" rows="4" onChange={this._handleEditor} value={this.state.editorState} />
@@ -98,10 +98,10 @@ render() {
         </label>
         {this.displayKernels(this.props.kernels)}
       </div>
-      {this.displayRender(this.props.editor.get('results'))}
+      {this.displayResult(this.props.editor.get('results').toArray())}
     </form>
     )
-}
+  }
 }
 
 

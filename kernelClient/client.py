@@ -46,7 +46,7 @@ class MyWebSocketApp(WebSocketApp):
         msg_type=header["msg_type"]
         if msg_type=="execute_reply":
             status=content["status"]
-            self.send(json.dumps({"command":"infoKernel","status":status}))
+            self.send(json.dumps({"command":"infoKernel","message":status}))
         elif msg_type=="display_data":
 	        content["output_type"]="display_data"
 	        self.send(json.dumps({"command":"resultKernel","result":content}))
