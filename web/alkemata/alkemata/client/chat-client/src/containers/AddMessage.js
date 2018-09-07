@@ -4,8 +4,8 @@ import { addMessage,kernelCommand } from '../actions'
 import { toJS } from './toJS'
 
 const mapDispatchToProps = dispatch => ({
-  dispatchMessage: (message) => {
-    dispatch(addMessage(message))
+  dispatchMessage: (message,kernel) => {
+    dispatch(addMessage(message,kernel))
   },
   dispatchCommand: (message,kernel) =>{
     dispatch(kernelCommand(message,kernel))

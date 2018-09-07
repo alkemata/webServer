@@ -1,90 +1,88 @@
 {% load static wagtailuserbar %}
+{% load fontawesome %}
 
 <!DOCTYPE html>
 <html class="no-js">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-    
-        <title>
-            {% block title %}
-                {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
-            {% endblock %}
-            {% block title_suffix %}
-                {% with self.get_site.site_name as site_name %}
-                    {% if site_name %}- {{ site_name }}{% endif %}
-                {% endwith %}
-            {% endblock %}
-        </title>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>
+    {% block title %} {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} {% endblock %} 
+    {% block title_suffix %} {% with self.get_site.site_name as site_name %} {% if site_name %}- {{ site_name }}{% endif %} 
+    {% endwith %} {% endblock %}
+  </title>
 
 
 
-        {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/alkemata.css' %}">
+  {# Global stylesheets #}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/alkemata.css' %}"> {% block extra_css %}
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/small-business.css' %}" rel="stylesheet"> {% endblock %}
+  {% fontawesome_stylesheet %}
+</head>
 
-        {% block extra_css %}
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="{% static 'css/small-business.css' %}" rel="stylesheet">
-        {% endblock %}
-    </head>
-
-    <body class="{% block body_class %}{% endblock %}">
-       <!-- Navigation -->
+<body class="{% block body_class %}{% endblock %}">
+  <!-- Navigation -->
 
 
-       <nav class="navbar navbar-expand-lg fixed-top"  style="color: #008900; background-color: #fb9600;">
-        <div class="container">
-          <a class="navbar-brand" href="#">
-            <img src="{% static 'brand/logo.png' %}" width="30" height="30" alt="">  
-            alkemata</a>
+  <nav class="navbar navbar-expand-lg" style="color: #008900; background-color: #fb9600;">
+    <div class="container">
 
-          <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-{% if user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link" href="#">{{ user.username }} </a>
-              </li>
+        <a class="nav-item nav-link"> Qui sommes-nous ?</a>
 
-{% endif%}
-            </ul>
-          </div>
+        <a class="nav-item nav-link">FAQ</a>
 
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+        <a class="nav-item nav-link"> Nous contacter</a>
+   
+      <ul class="navbar-nav ml-auto">
+
+          {% fontawesome_icon 'envelope-square' color='green' %}
+          {% fontawesome_icon 'twitter-square' color='green' %}
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="#">{{ user.username }} </a>
+        </li>
+        {% endif%}
+      </ul>
+    </div>
+  </nav>
+
+  <nav class="navbar  bg-faded">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="{% static 'brand/logo.png' %}" width="56" height="56" alt=""> alkemata
+      </a>
+
+      <ul class="navbar-nav ml-auto">
+      </ul>
+
+    </div>
+  </nav>
 
 
-        </div>
-      </nav>
-        {% wagtailuserbar %}
+  {% wagtailuserbar %}
+   {% block content %} {% endblock %}
 
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; alkemata 2018</p>
+    </div>
+    <!-- /.container -->
+  </footer>
 
-      {% block content %}
-       
-        
-        {% endblock %}
+  {# Global javascript #}
+  <script type="text/javascript" src="{% static 'js/alkemata.js' %}"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script> {% block extra_js %} {# Override this in templates to add extra javascript #} {% endblock %}
 
-          <!-- Footer -->
-      <footer class="py-5 bg-dark">
-            <div class="container">
-              <p class="m-0 text-center text-white">Copyright &copy; alkemata 2018</p>
-            </div>
-            <!-- /.container -->
-          </footer>
+</body>
 
-        {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/alkemata.js' %}"></script>
-      <!-- Bootstrap core JavaScript -->
-      <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-      <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-        {% block extra_js %}
-            {# Override this in templates to add extra javascript #}
-        {% endblock %}
-
-    </body>
 </html>

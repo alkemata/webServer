@@ -11,7 +11,6 @@ class AddMessageComponent extends React.Component {
     this._handleKernel = this._handleKernel.bind(this);
     this.state = {
       editorState: "",
-      outputs: [],
       selectedKernel: 'None',
       mode: 'raw'
     };
@@ -30,7 +29,10 @@ class AddMessageComponent extends React.Component {
   _onSendClick(event) {
     event.preventDefault()
     let text = this.state.editorState;
-    this.props.dispatchMessage(text);
+    let kernel=this.state.selectedKernel;
+    let outputs=this.props.editor.get('results');
+    let message={type:this.state.mode, text:text, output:outputs}
+    this.props.dispatchMessage(message,kernel);
     this.setState({ editorState: "" });
   }
 

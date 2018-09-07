@@ -1,9 +1,10 @@
 import * as types from '../constants/ActionTypes'
 
 
-export const addMessage = (message) => ({
+export const addMessage = (message,kernel) => ({
   type: types.ADD_MESSAGE,
-  message: message
+  message: message,
+  kernel:kernel
 })
 
 export const kernelCommand = (command,kernel) => ({
