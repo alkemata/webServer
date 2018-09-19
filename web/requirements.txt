@@ -25,4 +25,6 @@ django-template-debug
 channels
 channels_redis
 
-django-fontawesome
+#django-fontawesome
+#-e git://github.com/EfMichalis/django-fontawesome.git#egg=django-fontawesome
+django-icons

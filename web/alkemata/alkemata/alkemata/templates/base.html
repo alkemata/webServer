@@ -24,6 +24,7 @@
   <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <!-- Custom styles for this template -->
   <link href="{% static 'css/small-business.css' %}" rel="stylesheet"> {% endblock %}
+  <link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet"> 
   {% fontawesome_stylesheet %}
 </head>
 
@@ -41,9 +42,8 @@
         <a class="nav-item nav-link"> Nous contacter</a>
    
       <ul class="navbar-nav ml-auto">
-
-          {% fontawesome_icon 'envelope-square' color='green' %}
-          {% fontawesome_icon 'twitter-square' color='green' %}
+        {% fontawesome_icon 'envelope' 'fas' large=True%}
+        {% fontawesome_icon 'twitter' 'fab' large=True%}
         {% if user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="#">{{ user.username }} </a>
@@ -54,7 +54,7 @@
   </nav>
 
   <nav class="navbar  bg-faded">
-    <div class="container">
+    <div class="container" >
       <a class="navbar-brand" href="#">
         <img src="{% static 'brand/logo.png' %}" width="56" height="56" alt=""> alkemata
       </a>
